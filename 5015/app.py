@@ -5,6 +5,7 @@ from asyncio import Queue, Task
 import asyncio
 
 import uvicorn
+import websockets
 
 class Listener:
     def __init__(self):
@@ -22,17 +23,15 @@ class Listener:
             except Exception as e:
                 raise e
 
-    async def start_listening(self, conn):
-        self.listener_task = asyncio.create_task(self._listener(conn=conn))
+    async def start_listening(self):
+        self.listener_task = asyncio.create_task(self._listener())
 
 
-    async def _listener(self, conn) -> None:
-        async with conn.cursor() as cur:
-            await cur.execute("LISTEN channel")
-            while True:
-                msg = await conn.notifies.get()
+    async def _listener(self) -> None:
+        async with websockets.connect("ws://localhost:8001") as websocket:
+            async for message in websocket:
                 for q in self.subscribers:
-                    await q.put(msg)
+                    await q.put(message)
 
     async def stop_listening(self):
         if self.listener_task.done():
@@ -51,12 +50,14 @@ async def startup_event():
     # conn = some_method_to_get_postgres_connection()
     # global_listener.start_listening(conn=conn)
     # as i do not have a stream listener, i am passing.
-    pass
+    await global_listener.start_listening()
+    return
 
 @app.on_event("shutdown")
 async def shutdown_event():
     # Here you would normally call the stop_listener method
-    pass
+    await global_listener.stop_listening()
+    return
 
 
 @app.get('/add_item/{item}')
@@ -74,7 +75,8 @@ async def websocket_endpoint(websocket: WebSocket):
             data = await q.get()
             await websocket.send_text(data)
     except WebSocketDisconnect:
-            pass
+            return
+
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
