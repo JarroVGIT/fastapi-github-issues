@@ -1,8 +1,8 @@
 import typing
 from fastapi import BackgroundTasks, FastAPI, File, UploadFile
+from fastapi.security import OAuth2
 from fastapi.responses import FileResponse, StreamingResponse, JSONResponse
 from starlette.background import BackgroundTask
-import uvicorn
 
 app = FastAPI()
 
@@ -44,5 +44,6 @@ async def with_response_class():
 
 
 if __name__ == "__main__":
+    import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000, )    
 
