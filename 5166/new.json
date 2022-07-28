@@ -1,0 +1,131 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "FastAPI",
+        "version": "0.1.0"
+    },
+    "paths": {
+        "/a": {
+            "get": {
+                "summary": "A",
+                "operationId": "a_a_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "501": {
+                        "description": "Error 1"
+                    }
+                }
+            }
+        },
+        "/b": {
+            "get": {
+                "summary": "B",
+                "operationId": "b_b_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "502": {
+                        "description": "Error 2"
+                    },
+                    "4XX": {
+                        "description": "Error with range, upper"
+                    }
+                }
+            }
+        },
+        "/c": {
+            "get": {
+                "summary": "C",
+                "operationId": "c_c_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error with str"
+                    },
+                    "5XX": {
+                        "description": "Error with range, lower"
+                    },
+                    "default": {
+                        "description": "A default response"
+                    }
+                }
+            }
+        },
+        "/d": {
+            "get": {
+                "summary": "D",
+                "operationId": "d_d_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error with str"
+                    },
+                    "5XX": {
+                        "description": "Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Message"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Default Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Message"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Message": {
+                "title": "Message",
+                "required": [
+                    "message"
+                ],
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "title": "Message",
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}
