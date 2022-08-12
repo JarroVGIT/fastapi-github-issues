@@ -4,3 +4,4 @@ __pycache__
 zelftest/
 .DS_Store
 .v3.8.13
+venv
